@@ -88,7 +88,7 @@ void loop() {
   ecran.drawRoundRect(8, 80, 60, 30, 5, TFT_PINK);  // contour d'un rectangle à coins arrondis
   delay(500);
   // contour de triangle x1 = 120 y1 = 70 x2 = 90 y2 = 120 x3 = 150 y3 = 120 couleur cyan
-  ecran.drawTriangle(120, 70, 90, 120, 150, 120, TFT_CYAN);
+  ecran.drawTriangle(120, 7 0, 90, 120, 150, 120, TFT_CYAN);
   delay(500);
 
   // même chose, mais avec des formes pleines plutôt que des contours.
