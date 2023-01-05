@@ -17,14 +17,21 @@
 class Ecran
 {
 private:
-    eSprite_TDM spr_tdm;
-    eSprite_SHD spr_shd;
-    eSprite_balleX1 spr_balleX1;
-    eSprite_balleX3 spr_balleX3;
-    eSprite_balleX5 spr_balleX5;
-    eSprite_balleXAuto spr_balleXAuto;
-    eSprite_Reload spr_reload;
+    eSprite_TDM spr_tdm; //Sprite Tête de mort
+    eSprite_SHD spr_shd; //Sprite shield => bouclié ou armure
+    eSprite_balleX1 spr_balleX1; //Sprite de balle 1 coup
+    eSprite_balleX3 spr_balleX3; //Sprite de balle 3 coups
+    eSprite_balleX5 spr_balleX5; //Sprite de balle 5 coups
+    eSprite_balleXAuto spr_balleXAuto; //Sprite de balle automatique
+    eSprite_Reload spr_reload; //Sprite de rechargement
 
+    int memoMunition = -1; // Nombre de munition dans le chargeur
+    int memoArmure = -1; // Nombre de point d'armure
+    int memoVie = -1; // Nombre de point de vie
+    modeTire memoMode = modeTire::automatique; // Mode de tir
+    etatArme memoEtat = etatArme::attente; // Etat de l'arme
+
+    void drawValue(int x, int y, int value, int size, uint16_t color);
 public:
     int lastChange;
     TFT_eSPI ecran;
@@ -89,7 +96,7 @@ public:
      * @param armure
      * @param vie
      */
-    void afficherEcranJeuArmure(int armure, int vie);
+    void afficherEcranJeuArmureVie(int armure, int vie);
 
     /**
      * @brief Affiche l'écran  de jeu sans activité mise en avant
@@ -109,4 +116,8 @@ public:
      * @param inpTxt
      */
     void EcranAfficherChoixMdPSSID(InputText inpTxt);
+
+    void DrawSprite(int xDest, int yDest,  TFT_eSprite *sprite, uint16_t color, float scale);
+
+    void SetChangeToEcranInGame(int armure, int vie, int munition, modeTire mode, etatArme etat, int tempsRestantReload, int score);
 }; 
