@@ -24,5 +24,5 @@ enum etatEcran{
 	affichageVie, //Affichage de l'écran de jeu avec la vie
 	affichageScore, //Affichage de l'écran de jeu avec le score
 	affichageArme, //Affichage de l'écran de jeu avec le mode de tir et les munitions restantes
-}
+};
 #endif

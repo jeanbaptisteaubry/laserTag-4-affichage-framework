@@ -1,7 +1,9 @@
-#ifndef InputText_H
-#define InputText_H
 #include <pgmspace.h>
 #include <Arduino.h>
+
+#ifndef InputText_H
+#define InputText_H
+
 
 /**
  * @brief Classe permettant de gérer la construction d'une chaine de saisie avec un curseur qui se déplace

@@ -28,10 +28,15 @@ private:
     int memoMunition = -1; // Nombre de munition dans le chargeur
     int memoArmure = -1; // Nombre de point d'armure
     int memoVie = -1; // Nombre de point de vie
-    modeTire memoMode = modeTire::automatique; // Mode de tir
-    etatArme memoEtat = etatArme::attente; // Etat de l'arme
+    modeTire memoModeTir = modeTire::automatique; // Mode de tir
+    etatArme memoEtatArme = etatArme::attente; // Etat de l'arme
+    int memoScore = -1; // Score du joueur
 
     void drawValue(int x, int y, int value, int size, uint16_t color);
+
+    int timeLastChgt = -1;
+    bool boolTimerChgtEnCours = false;
+    etatEcran etatEcranActuel = etatEcran::affichageFull;
 public:
     int lastChange;
     TFT_eSPI ecran;
@@ -90,6 +95,18 @@ public:
      */
     void afficherEcranJeuArme(int munition, modeTire mode, etatArme etat, int tempsRestantReload);
 
+    void afficherEcranJeuScore(int score);
+
+    /**
+     * @brief On vérifie si l'écran doit revenir à l'affichage normal
+     *
+     * @param munition
+     * @param mode
+     * @param etat
+     * @param tempsRestantReload
+     */
+    void afficherEcranJeuMAJ();
+
     /**
      * @brief Une action fait évoluer l'armure et/ou la vie du joueur mais pas l'arme
      *
@@ -108,7 +125,7 @@ public:
      * @param etat
      * @param tempsRestantReload
      */
-    void afficherEcranJeu(int armure, int vie, int munition, modeTire mode, etatArme etat, int tempsRestantReload);
+    void afficherEcranJeu(int armure, int vie, int munition, modeTire mode, etatArme etat, int tempsRestantReload, int score);
 
     /**
      * @brief Affichage de la zone Input pour la sélection du SSID
