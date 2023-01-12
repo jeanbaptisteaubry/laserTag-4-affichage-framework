@@ -2,71 +2,99 @@
 #include <Arduino.h>
 #include "Ecran.h"
 #include "enum.h"
-
+#define STATE_INIT 1
 Ecran ecran;
+int etape = 0;
+int memoEtape = -1;
+int lastTime = 0;
 
 void setup()
 {
   Serial.begin(115200);
-
-  Serial.printf("***** Démarrage *****\n");
-
   ecran.init();
   ecran.effacerEcran();
-
-  ecran.afficherEcranJeuArmureVie(50, 50);
-}
-
-int etape = 0;
-int lastTime = 0;
-void loop()
-{
-  // On fait une animation de test
-  if (millis() - lastTime > 5000)
-  {
-    lastTime = millis();
-    etape++;
-    if (etape > 6)
-      etape = 0;
-    Serial.printf("Etape : %d \n", etape);
-  }
-  switch (etape)
+  switch (STATE_INIT)
   {
   case 0:
-    // Base
-    ecran.SetChangeToEcranInGame(50, 50, 50, modeTire::simple, etatArme::attente, 0, 1);
-    break;
+    Serial.printf("***** Démarrage *****\n");
+    Serial.printf("Etape : %d\n", etape);
 
+   
+    break;
   case 1:
-    // On tire avec une arme simple 20 shoots
-    ecran.SetChangeToEcranInGame(50, 50, 30, modeTire::simple, etatArme::attente, 0, 1);
-
-    break;
-
-  case 2:
-    // On change le mode de tir en rafale
-    ecran.SetChangeToEcranInGame(50, 50, 30, modeTire::rafale, etatArme::attente, 0, 1);
-    break;
-
-  case 3:
-    // On change le mode de tir en automatique
-    ecran.SetChangeToEcranInGame(50, 50, 20, modeTire::automatique, etatArme::attente, 0, 1);
-    break;
-
-  case 4:
-    // On recharge le chargeur
-    ecran.SetChangeToEcranInGame(50, 50, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
-    break;
-  case 5:
-    // On se fait toucher dans l'armure
-    ecran.SetChangeToEcranInGame(20, 50, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
-    break;
-  case 6:
-    // On se fait toucher dans la vie
-    ecran.SetChangeToEcranInGame(20, 20, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
+    ecran.afficherEcranJeuArmureVie(50, 50);
     break;
   }
-  ecran.afficherEcranJeuMAJ();
+}
+bool ecranAfficherEtape = false;
+void loop()
+{
+
+  switch (STATE_INIT)
+  {
+  case 0:
+
+    if (millis() - lastTime > 6000)
+    {
+      lastTime = millis();
+      etape++;
+      if (etape > 6)
+        etape = 0;
+      Serial.printf("Etape : %d\n", etape);
+      ecranAfficherEtape = false;
+    }
+
+    // On fait une animation de test
+    if (millis() - lastTime < 1000)
+    {
+      if (ecranAfficherEtape == false)
+      {
+        ecranAfficherEtape = true;
+        ecran.effacerEcran();
+        char str[20];
+        sprintf(str, "Etape : %d", etape);
+        ecran.afficherCentrerNormal(str);
+      }
+    }
+    else
+      switch (etape)
+      {
+      case 0:
+        // Base
+        if (memoEtape != etape)
+          Serial.println("Attendu : intialisation");
+
+        ecran.SetChangeToEcranInGame(50, 50, 50, modeTire::simple, etatArme::attente, 0, 1);
+        break;
+
+      case 1:
+        // On tire avec une arme simple 20 shoots
+        if (memoEtape != etape)
+          Serial.println("Attendu changement munition donc, 5s et 2s");
+        ecran.SetChangeToEcranInGame(50, 50, 30, modeTire::simple, etatArme::attente, 0, 1);
+
+    break;
+      
+    case 2:
+      //On change le mode de tir en rafale
+      ecran.SetChangeToEcranInGame(50,50,30,modeTire::rafale,etatArme::attente,0,1);
+    break;
+
+    case 3:
+      //On change le mode de tir en automatique
+      ecran.SetChangeToEcranInGame(50,50,20,modeTire::automatique,etatArme::attente,0,1);
+    break;
+
+    case 4:
+      //On recharge le chargeur
+      ecran.SetChangeToEcranInGame(50,50,20,modeTire::automatique,etatArme::rechargeChargeur,0,1);
+    case 5:
+      //On se fait toucher dans l'armure
+      ecran.SetChangeToEcranInGame(20,50,20,modeTire::automatique,etatArme::rechargeChargeur,0,1);
+    case 6:
+      //On se fait toucher dans la vie
+      ecran.SetChangeToEcranInGame(20,20,20,modeTire::automatique,etatArme::rechargeChargeur,0,1);
+  }
 
   // ecran.effacerEcran();
   /*ecran.afficherCentrerNormal("Hello World");
