@@ -12,6 +12,7 @@
 #include "enum.h"
 #include "InputText.h"
 
+#define ROTATION 1
 #define _RGB16BIT565(r, g, b) ((b % 32) + ((g % 64) << 6) + ((r % 32) << 11))
 
 class Ecran
@@ -37,6 +38,8 @@ private:
     int timeLastChgt = -1;
     bool boolTimerChgtEnCours = false;
     etatEcran etatEcranActuel = etatEcran::affichageFull;
+    int width =-1;
+    int height = -1;
 public:
     int lastChange;
     TFT_eSPI ecran;
@@ -63,7 +66,7 @@ public:
     void drawVeille();
 
     void init();
-
+    
     void effacerEcran();
     /**
      * @brief Affichage au centre
