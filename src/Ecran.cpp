@@ -157,80 +157,65 @@ void Ecran::afficherCentrerAlerte(char *str)
  */
 void Ecran::afficherEcranJeuArme(int munition, modeTire mode, etatArme etat, int tempsRestantReload)
 {
+    effacerEcran();
     if (etat != rechargeChargeur)
     {
-        effacerEcran();
-        setChange();
 
         switch (mode)
         {
         case simple:
-            spr_balleX1.pushSprite(0, 20);
+            DrawSprite(0, 20, &spr_balleX1, TFT_WHITE, 1.0f);
             Serial.println("Simple");
             break;
         case rafale:
-            spr_balleX3.pushSprite(0, 20);
+            DrawSprite(0, 20, &spr_balleX3, TFT_WHITE, 1.0f);
             Serial.println("Rafale");
             break;
         case automatique:
-            spr_balleXAuto.pushSprite(0, 20);
+            DrawSprite(0, 20, &spr_balleXAuto, TFT_WHITE, 1.0f);
             Serial.println("Automatique");
             break;
         }
-
-        char str[4];
-        if (munition <= 9)
-            sprintf(str, "0%d\n", munition);
-        else if (munition <= 99)
-            sprintf(str, "%d\n", munition);
-        else
-            sprintf(str, "++\n");
-        // Sprite spr = new Sprite
-        // ecran.pushImage
-
-        ecran.drawCentreString(str, 120, 20, 6);
+        drawValue(munition, 120, 20, 6, TFT_WHITE);
     }
     else
     {
 
         // Changement de temps
-        effacerEcran();
-        setChange();
-
-        memoRestant = tempsRestantReload;
-        spr_reload.pushSprite(0, 20);
-        char str[4];
-        sprintf(str, "%d\n", tempsRestantReload);
-        // Sprite spr = new Sprite
-        // ecran.pushImage
-        ecran.setTextColor(TFT_RED);
-        ecran.drawCentreString(str, 120, 20, 6);
-        ecran.setTextColor(TFT_WHITE);
+        DrawSprite(0, 20, &spr_reload, TFT_WHITE, 1.0f);
+        drawValue(tempsRestantReload, 120, 20, 6, TFT_RED);
         Serial.printf("Reload %d\n", tempsRestantReload);
     }
 }
 
 void Ecran::DrawSprite(int xDest, int yDest, TFT_eSprite *sprite, uint16_t color, float scale)
 {
-    int width = sprite->width();
-    int height = sprite->height();
 
-    for (int x = 0; x < width; x++)
+    if (scale != 1.0f)
     {
-        for (int y = 0; y < height; y++)
+        int width = sprite->width();
+        int height = sprite->height();
+        for (int x = 0; x < width; x++)
         {
-            uint16_t pixel = sprite->readPixel(x, y);
-            if (pixel != TFT_TRANSPARENT)
+            for (int y = 0; y < height; y++)
             {
-                for (int xScale = (int)(x * scale); xScale < (int)((x + 1) * scale); xScale++)
+                uint16_t pixel = sprite->readPixel(x, y);
+                if (pixel != TFT_TRANSPARENT)
                 {
-                    for (int yScale = (int)(y * scale); yScale < (int)((y + 1) * scale); yScale++)
+                    for (int xScale = (int)(x * scale); xScale < (int)((x + 1) * scale); xScale++)
                     {
-                        ecran.drawPixel(xDest + xScale, yDest + yScale, pixel);
+                        for (int yScale = (int)(y * scale); yScale < (int)((y + 1) * scale); yScale++)
+                        {
+                            ecran.drawPixel(xDest + xScale, yDest + yScale, pixel);
+                        }
                     }
                 }
             }
         }
+    }
+    else
+    {
+        sprite->pushSprite(xDest, yDest);
     }
 }
 
@@ -318,7 +303,6 @@ void Ecran::afficherEcranJeu(int armure, int vie, int munition, modeTire mode, e
         drawValue(tempsRestantReload, 135, 10, 4, TFT_RED);
 
         Serial.printf("Reload %d\n", tempsRestantReload);
-        setChange();
     }
 
     // Il faut afficher le score en bas à droite
@@ -422,7 +406,7 @@ void Ecran::SetChangeToEcranInGame(int armure, int vie, int munition, modeTire m
         memoEtatArme = etatArme;
         memoRestant = tempsRestantReload;
         memoScore = score;
-        }
+    }
 }
 
 void Ecran::afficherEcranJeuMAJ()
@@ -435,6 +419,7 @@ void Ecran::afficherEcranJeuMAJ()
             afficherEcranJeu(memoArmure, memoVie, memoMunition, memoModeTir, memoEtatArme, memoRestant, memoScore);
             etatEcranActuel = etatEcran::affichageFull;
             boolTimerChgtEnCours = false;
+            Serial.println("afficherEcranJeuMAJ : Update OK");
         }
     }
 }
