@@ -5,6 +5,7 @@
 #include "enum.h"
 #include "InputText.h"
 #include "Ecran.h"
+//#include <Fonts/GFXFF/FreeSans9pt7b.h>
 
 Ecran::Ecran() : ecran(),
                  spr_tdm(&ecran),
@@ -88,8 +89,9 @@ void Ecran::drawVeille()
 void Ecran::init()
 {
     ecran.init();
-    if(ROTATION)
-    {// réglage de l'écran en mode paysage (0 pour mode portrait)
+    if (ROTATION)
+    { // réglage de l'écran en mode paysage (0 pour mode portrait)
+        ecran.setFreeFont(&FreeSans9pt7b);
         ecran.setRotation(1);
         width = TFT_HEIGHT;
         height = TFT_WIDTH;
@@ -100,7 +102,7 @@ void Ecran::init()
         width = TFT_WIDTH;
         height = TFT_HEIGHT;
     }
-     
+
     ecran.fillScreen(TFT_BLACK);
     ecran.setTextColor(TFT_WHITE);
     // Charge depuis un fichier
@@ -129,11 +131,43 @@ void Ecran::effacerEcran()
  *
  * @param str
  */
-void Ecran::afficherCentrerNormal(char *str)
+/*void Ecran::afficherCentrerNormal(char *str)
 {
     ecran.setTextColor(TFT_WHITE);
     ecran.drawCentreString(str, width / 2,  height / 2, 2);
     setChange();
+}*/
+
+void Ecran::afficherCentrerNormal(char *str, int taille = 1)
+{
+    ecran.setTextSize(taille);
+
+    ecran.setTextColor(TFT_WHITE);
+
+   /* ecran.setCursor(width / 2 - ecran.textsize * strlen(str) / 2, height / 2 - ecran.fontHeight() / 2);
+    ecran.print(str);*/
+    ecran.drawCentreString(str, width / 2, height / 2 - ecran.fontHeight() / 3, 2);
+    setChange();
+}
+
+/**
+ * @brief affiche une valeur sur l'écran, centrée aux coordonnées indiquées
+ */
+void Ecran::drawValue(int value, int x, int y, int size, uint16_t color)
+{
+    
+    char str[2];
+    if (value <= 9)
+        sprintf(str, "0%d", value);
+    else if (value <= 99)
+        sprintf(str, "%d", value);
+    else
+        sprintf(str, "++");
+    ecran.setTextSize(size);
+   ecran.setTextColor(color);
+     ecran.drawCentreString(str, x, y- ecran.fontHeight() / 3,2);
+  
+    ecran.setTextColor(TFT_WHITE);
 }
 
 /**
@@ -156,7 +190,7 @@ void Ecran::afficherGaucheL1(char *str)
 void Ecran::afficherCentrerAlerte(char *str)
 {
     ecran.setTextColor(TFT_RED);
-    ecran.drawCentreString(str, width / 2,  height / 2, 2);
+    ecran.drawCentreString(str, width / 2, height / 2, 2);
     ecran.setTextColor(TFT_WHITE);
     setChange();
 }
@@ -178,25 +212,25 @@ void Ecran::afficherEcranJeuArme(int munition, modeTire mode, etatArme etat, int
         switch (mode)
         {
         case simple:
-            spr_balleX1.pushSprite(0, (height - spr_balleX1.height())/2 );
+            spr_balleX1.pushSprite(0, (height - spr_balleX1.height()) / 2);
             Serial.println("Simple");
             break;
         case rafale:
-            spr_balleX3.pushSprite(0, (height - spr_balleX3.height())/2);
+            spr_balleX3.pushSprite(0, (height - spr_balleX3.height()) / 2);
             Serial.println("Rafale");
             break;
         case automatique:
-            spr_balleXAuto.pushSprite(0, (height - spr_balleXAuto.height())/2);
+            spr_balleXAuto.pushSprite(0, (height - spr_balleXAuto.height()) / 2);
             Serial.println("Automatique");
             break;
         }
-        drawValue(munition, (3 * width )/ 4, height /2 , 6, TFT_WHITE);
+        drawValue(munition, (3 * width) / 4, height / 2, 6, TFT_WHITE);
     }
     else
     {
         // Changement de temps
-        spr_reload.pushSprite(0, (height - spr_reload.height())/2);
-        drawValue(tempsRestantReload, (3 * width )/ 4, height /2 , 6, TFT_RED);
+        spr_reload.pushSprite(0, (height - spr_reload.height()) / 2);
+        drawValue(tempsRestantReload, (3 * width) / 4, height / 2, 6, TFT_RED);
         Serial.printf("Reload %d\n", tempsRestantReload);
     }
 }
@@ -241,37 +275,15 @@ void Ecran::DrawSprite(int xDest, int yDest, TFT_eSprite *sprite, uint16_t color
 void Ecran::afficherEcranJeuArmureVie(int armure, int vie)
 {
     Serial.printf("afficherEcranJeuArmureVie 2s\n");
-      // effacerEcran();
+    // effacerEcran();
     setChange();
 
-    //DrawSprite(0, (height - spr_shd.height() * 1.5f) /2, &spr_shd, TFT_WHITE, 1.5f);
-   // DrawSprite(width / 2 , (height - spr_tdm.height()) /2, &spr_tdm, TFT_WHITE, 1.5f);
-    drawValue(armure,(int) (width / 2), (int)(height / 2), 4, TFT_WHITE);
-    //drawValue(armure, spr_shd.width()*1.5f + (width / 2 -  spr_shd.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
-  //  drawValue(vie,spr_tdm.width()*1.5f + width / 2 + (width / 2 -  spr_tdm.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
-}
-
-/**
- * @brief affiche une valeur sur l'écran, centrée aux coordonnées indiquées
-*/
-void Ecran::drawValue(int value, int x, int y, int size, uint16_t color)
-{
-    ecran.setTextColor(color);
-    char str[6];
-    if (value <= 9)
-        sprintf(str, "0%d\n", value);
-    else if (value <= 99)
-        sprintf(str, "%d\n", value);
-    else
-        sprintf(str, "++\n");
-    ecran.setTextSize(size);
+    DrawSprite(0, (height - spr_shd.height() * 1.5f) /2, &spr_shd, TFT_WHITE, 1.25f);
+     DrawSprite(width / 2 , (height - spr_tdm.height()) /2, &spr_tdm, TFT_WHITE, 1.25f);
     
-    
- 
-  ecran.setCursor(width/2 - ecran.textsize * strlen(str)/2, height/2 - ecran.fontHeight()/2);
-  ecran.print(str);
- //   ecran.drawCentreString(str, x, y, size);
-    ecran.setTextColor(TFT_WHITE);
+    drawValue(armure, (int)(width / 2), (int)(height / 2), 4, TFT_WHITE);
+    // drawValue(armure, spr_shd.width()*1.5f + (width / 2 -  spr_shd.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
+    //  drawValue(vie,spr_tdm.width()*1.5f + width / 2 + (width / 2 -  spr_tdm.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
 }
 
 /**
@@ -314,17 +326,16 @@ void Ecran::afficherEcranJeu(int armure, int vie, int munition, modeTire mode, e
             break;
         }
 
-        if(munition < 10)
+        if (munition < 10)
             drawValue(munition, 135, 10, 4, TFT_RED);
         else
             drawValue(munition, 135, 10, 4, TFT_WHITE);
-
     }
     else
     {
         spr_reload.pushSprite(80, 0);
 
-        drawValue(tempsRestantReload, 135, 10, 4, TFT_RED); 
+        drawValue(tempsRestantReload, 135, 10, 4, TFT_RED);
         Serial.printf("afficherEcranJeu 5s Reload %d\n", tempsRestantReload);
         setChange();
     }
@@ -375,10 +386,10 @@ void Ecran::SetChangeToEcranInGame(int armure, int vie, int munition, modeTire m
         int nbChgt = 0;
         if (armure != memoArmure || vie != memoVie)
             nbChgt++;
-        
-        if (munition != memoMunition || etatArme != memoEtatArme || tempsRestantReload != memoRestant || modeTir != memoModeTir) 
+
+        if (munition != memoMunition || etatArme != memoEtatArme || tempsRestantReload != memoRestant || modeTir != memoModeTir)
             nbChgt++;
-        
+
         if (score != memoScore)
             nbChgt++;
 

@@ -68,13 +68,9 @@ public:
     void init();
     
     void effacerEcran();
-    /**
-     * @brief Affichage au centre
-     *
-     * @param str
-     */
-    void afficherCentrerNormal(char *str);
+    
 
+    void afficherCentrerNormal(char *str, int size);
     /**
      * @brief Affiche la chaine Titre à gauche en première ligne
      *
