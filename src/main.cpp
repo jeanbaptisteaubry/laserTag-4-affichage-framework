@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "Ecran.h"
 #include "enum.h"
-#define STATE_INIT 2
+#define STATE_INIT 0
 Ecran ecran;
 int etape = 0;
 int memoEtape = -1;
@@ -13,6 +13,7 @@ void setup()
   Serial.begin(115200);
   ecran.init();
   ecran.effacerEcran();
+  Serial.printf("STATE_INIT : %d\n", STATE_INIT);
   switch (STATE_INIT)
   {
   case 0:
@@ -22,6 +23,23 @@ void setup()
     break;
   case 2:
     ecran.afficherEcranJeuArmureVie(50, 50);
+    break;
+  case 3:
+    ecran.afficherEcranJeuArme(50, modeTire::simple, etatArme::attente, 0);
+
+    break;
+     case 4:
+    ecran.afficherEcranJeuArme(50, modeTire::rafale, etatArme::attente, 0);
+
+    break;
+         case 5:
+    ecran.afficherEcranJeuArme(50, modeTire::automatique, etatArme::attente, 0);
+
+    break;
+
+             case 6:
+    ecran.afficherEcranJeuArme(50, modeTire::automatique, etatArme::rechargeChargeur, 10);
+
     break;
   }
 }
@@ -91,6 +109,7 @@ void loop()
         break;
 
       case 2:
+
         // On change le mode de tir en rafale
         ecran.SetChangeToEcranInGame(50, 50, 30, modeTire::rafale, etatArme::attente, 0, 1);
         break;
@@ -103,14 +122,21 @@ void loop()
       case 4:
         // On recharge le chargeur
         ecran.SetChangeToEcranInGame(50, 50, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
+        break;
+
       case 5:
         // On se fait toucher dans l'armure
         ecran.SetChangeToEcranInGame(20, 50, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
+  break;
+
       case 6:
         // On se fait toucher dans la vie
         ecran.SetChangeToEcranInGame(20, 20, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
-      }
+  break;
 
+      }
+      memoEtape = etape;
+ecran.afficherEcranJeuMAJ();
     // ecran.effacerEcran();
     /*ecran.afficherCentrerNormal("Hello World");
     delay(2500);

@@ -5,7 +5,7 @@
 #include "enum.h"
 #include "InputText.h"
 #include "Ecran.h"
-//#include <Fonts/GFXFF/FreeSans9pt7b.h>
+// #include <Fonts/GFXFF/FreeSans9pt7b.h>
 
 Ecran::Ecran() : ecran(),
                  spr_tdm(&ecran),
@@ -144,8 +144,8 @@ void Ecran::afficherCentrerNormal(char *str, int taille = 1)
 
     ecran.setTextColor(TFT_WHITE);
 
-   /* ecran.setCursor(width / 2 - ecran.textsize * strlen(str) / 2, height / 2 - ecran.fontHeight() / 2);
-    ecran.print(str);*/
+    /* ecran.setCursor(width / 2 - ecran.textsize * strlen(str) / 2, height / 2 - ecran.fontHeight() / 2);
+     ecran.print(str);*/
     ecran.drawCentreString(str, width / 2, height / 2 - ecran.fontHeight() / 3, 2);
     setChange();
 }
@@ -155,8 +155,8 @@ void Ecran::afficherCentrerNormal(char *str, int taille = 1)
  */
 void Ecran::drawValue(int value, int x, int y, int size, uint16_t color)
 {
-    
-    char str[2];
+
+    char str[3];
     if (value <= 9)
         sprintf(str, "0%d", value);
     else if (value <= 99)
@@ -164,9 +164,9 @@ void Ecran::drawValue(int value, int x, int y, int size, uint16_t color)
     else
         sprintf(str, "++");
     ecran.setTextSize(size);
-   ecran.setTextColor(color);
-     ecran.drawCentreString(str, x, y- ecran.fontHeight() / 3,2);
-  
+    ecran.setTextColor(color);
+    ecran.drawCentreString(str, x, y - ecran.fontHeight() / 3, 2);
+
     ecran.setTextColor(TFT_WHITE);
 }
 
@@ -207,30 +207,45 @@ void Ecran::afficherEcranJeuArme(int munition, modeTire mode, etatArme etat, int
     Serial.printf("afficherEcranJeuArme 2s\n");
     effacerEcran();
     setChange();
+    int deltaX = 0;
+    int deltaY = 0;
+    float coeff = 1.5f ;
     if (etat != rechargeChargeur)
     {
         switch (mode)
         {
         case simple:
-            spr_balleX1.pushSprite(0, (height - spr_balleX1.height()) / 2);
+            deltaX = (width / 2 - spr_balleX1.width() * coeff) / 2;
+            deltaY = (height / 2 - spr_balleX1.height() * coeff) / 2;
+            DrawSprite(deltaX, deltaY + (height - spr_balleX1.height() * coeff) / 2, &spr_balleX1, TFT_WHITE, coeff);
+
             Serial.println("Simple");
             break;
         case rafale:
-            spr_balleX3.pushSprite(0, (height - spr_balleX3.height()) / 2);
+            deltaX = (width / 2 - spr_balleX3.width() * coeff) / 2;
+            deltaY = (height / 2 - spr_balleX3.height() * coeff) / 2;
+            DrawSprite(deltaX, deltaY + (height - spr_balleX3.height() * coeff) / 2, &spr_balleX3, TFT_WHITE, coeff);
+
             Serial.println("Rafale");
             break;
         case automatique:
-            spr_balleXAuto.pushSprite(0, (height - spr_balleXAuto.height()) / 2);
+            deltaX = (width / 2 - spr_balleXAuto.width() * coeff) / 2;
+            deltaY = (height / 2 - spr_balleXAuto.height() * coeff) / 2;
+            DrawSprite(deltaX, deltaY + (height - spr_balleXAuto.height() * coeff) / 2, &spr_balleXAuto, TFT_WHITE, coeff);
+
             Serial.println("Automatique");
             break;
         }
-        drawValue(munition, (3 * width) / 4, height / 2, 6, TFT_WHITE);
+        drawValue(munition, (3 * width) / 4, height / 2, 5, TFT_WHITE);
     }
     else
     {
         // Changement de temps
-        spr_reload.pushSprite(0, (height - spr_reload.height()) / 2);
-        drawValue(tempsRestantReload, (3 * width) / 4, height / 2, 6, TFT_RED);
+        deltaX = (width / 2 - spr_reload.width() * coeff) / 2;
+        deltaY = (height / 2 - spr_reload.height() * coeff) / 2;
+        DrawSprite(deltaX, deltaY + (height - spr_reload.height() * coeff) / 2, &spr_reload, TFT_WHITE, coeff);
+
+        drawValue(tempsRestantReload, (3 * width) / 4, height / 2, 5, TFT_RED);
         Serial.printf("Reload %d\n", tempsRestantReload);
     }
 }
@@ -274,14 +289,19 @@ void Ecran::DrawSprite(int xDest, int yDest, TFT_eSprite *sprite, uint16_t color
  */
 void Ecran::afficherEcranJeuArmureVie(int armure, int vie)
 {
-    Serial.printf("afficherEcranJeuArmureVie 2s\n");
-    // effacerEcran();
+    float coeff = 1.5f;
+    Serial.printf("afficherEcranJeuArmureVie 2s %d %d \n", armure, vie);
+    effacerEcran();
     setChange();
 
-    DrawSprite(0, (height - spr_shd.height() * 1.5f) /2, &spr_shd, TFT_WHITE, 1.25f);
-     DrawSprite(width / 2 , (height - spr_tdm.height()) /2, &spr_tdm, TFT_WHITE, 1.25f);
-    
-    drawValue(armure, (int)(width / 2), (int)(height / 2), 4, TFT_WHITE);
+    int deltaX = (width / 2 - spr_shd.width() * coeff) / 2;
+    int deltaY = (height / 2 - spr_shd.height() * coeff) / 2;
+    int deltaY2 = (height / 2 - spr_tdm.height() * coeff) / 2;
+    DrawSprite(deltaX, deltaY, &spr_shd, TFT_WHITE, coeff);
+    DrawSprite(deltaX, height / 2 + deltaY2, &spr_tdm, TFT_WHITE, coeff);
+
+    drawValue(armure, width * 3 / 4, spr_shd.height() * coeff / 2 + deltaY, 4, TFT_WHITE);
+    drawValue(vie, width * 3 / 4, spr_tdm.height() * coeff / 2 + height / 2 + deltaY2, 4, TFT_WHITE);
     // drawValue(armure, spr_shd.width()*1.5f + (width / 2 -  spr_shd.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
     //  drawValue(vie,spr_tdm.width()*1.5f + width / 2 + (width / 2 -  spr_tdm.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
 }
