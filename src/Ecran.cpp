@@ -321,48 +321,51 @@ void Ecran::afficherEcranJeu(int armure, int vie, int munition, modeTire mode, e
 
     effacerEcran();
     setChange();
-    spr_tdm.pushSprite(0, 0);
-    drawValue(armure, 52, 10, 4, TFT_WHITE);
+     int deltaY = (height -  spr_tdm.height() - spr_shd.height()) / 3;
+     
+    spr_tdm.pushSprite(0, deltaY);
+    drawValue(armure, width / 4 + spr_tdm.width()/2 , spr_tdm.height ()/ 2 + deltaY, 2, TFT_WHITE);
 
-    spr_shd.pushSprite(0, 40);
-    drawValue(vie, 52, 50, 4, TFT_WHITE);
+    spr_shd.pushSprite(0, height / 2 + deltaY / 2);
+    drawValue(vie, width / 4 + spr_shd.width()/2 , spr_shd.height() / 2 + height /2 + deltaY/2, 2, TFT_WHITE);
 
+   
     if (etat != rechargeChargeur)
     {
         Serial.printf("afficherEcranJeu 5s changement mode arme\n");
         switch (mode)
         {
         case simple:
-            spr_balleX1.pushSprite(80, 0);
+            spr_balleX1.pushSprite(width / 2, + deltaY);
             Serial.println("Simple");
             break;
         case rafale:
-            spr_balleX3.pushSprite(80, 0);
+            spr_balleX3.pushSprite(width / 2, + deltaY);
             Serial.println("Rafale");
             break;
         case automatique:
-            spr_balleXAuto.pushSprite(80, 0);
+            spr_balleXAuto.pushSprite(width / 2,+ deltaY);
             Serial.println("Automatique");
             break;
         }
 
         if (munition < 10)
-            drawValue(munition, 135, 10, 4, TFT_RED);
+            drawValue(munition,3 * width / 4 + spr_balleXAuto.width()/2, spr_balleXAuto.height() /2 + deltaY, 2, TFT_RED);
         else
-            drawValue(munition, 135, 10, 4, TFT_WHITE);
+            drawValue(munition, 3 * width / 4 + spr_balleXAuto.width()/2, spr_balleXAuto.height() /2 + deltaY, 2, TFT_WHITE);
     }
     else
     {
-        spr_reload.pushSprite(80, 0);
+        spr_reload.pushSprite(width / 2, + deltaY);
 
-        drawValue(tempsRestantReload, 135, 10, 4, TFT_RED);
+        drawValue(tempsRestantReload, 3 * width / 4 + spr_balleXAuto.width()/2, spr_balleXAuto.height() /2 + deltaY, 2, TFT_RED);
         Serial.printf("afficherEcranJeu 5s Reload %d\n", tempsRestantReload);
         setChange();
     }
 
     // Il faut afficher le score en bas à droite
     // TODO : Manque le sprite
-    drawValue(score, 135, 40, 4, TFT_WHITE);
+    drawValue(score, 3 * width / 4 + spr_balleXAuto.width()/2, spr_balleXAuto.height() /2 + height /2 + deltaY/2, 2, TFT_WHITE);
 }
 
 /**
