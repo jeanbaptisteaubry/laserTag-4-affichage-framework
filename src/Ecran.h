@@ -2,12 +2,13 @@
 #include <TFT_eSPI.h>
 #include <SPI.h>
 
-#include "eSprite_TDM.h"
-#include "eSprite_SHD.h"
-#include "eSprite_balleX1.h"
-#include "eSprite_balleX3.h"
-#include "eSprite_balleX5.h"
-#include "eSprite_balleXAuto.h"
+#include "sprite.h"
+//#include "eSprite_TDM.h"
+//#include "eSprite_SHD.h"
+//#include "eSprite_balleX1.h"
+//#include "eSprite_balleX3.h"
+//#include "eSprite_balleX5.h"
+//#include "eSprite_balleXAuto.h"
 #include "eSprite_reload.h" 
 #include "enum.h"
 #include "InputText.h"
@@ -18,12 +19,12 @@
 class Ecran
 {
 private:
-    eSprite_TDM spr_tdm; //Sprite Tête de mort
-    eSprite_SHD spr_shd; //Sprite shield => bouclié ou armure
-    eSprite_balleX1 spr_balleX1; //Sprite de balle 1 coup
-    eSprite_balleX3 spr_balleX3; //Sprite de balle 3 coups
-    eSprite_balleX5 spr_balleX5; //Sprite de balle 5 coups
-    eSprite_balleXAuto spr_balleXAuto; //Sprite de balle automatique
+    Sprite_TeteDeMort spr_tdm; //Sprite Tête de mort
+    Sprite_Bouclier spr_shd; //Sprite shield => bouclié ou armure
+    Sprite_Balle_Par_1 spr_balleX1; //Sprite de balle 1 coup
+    Sprite_Balle_Rafale_Par_3 spr_balleX3; //Sprite de balle 3 coups
+  //  eSprite_balleX5 spr_balleX5; //Sprite de balle 5 coups
+    Sprite_Balle_Vollee spr_balleXAuto; //Sprite de balle automatique
     eSprite_Reload spr_reload; //Sprite de rechargement
 
     int memoMunition = -1; // Nombre de munition dans le chargeur

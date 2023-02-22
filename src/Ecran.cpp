@@ -12,7 +12,6 @@ Ecran::Ecran() : ecran(),
                  spr_shd(&ecran),
                  spr_balleX1(&ecran),
                  spr_balleX3(&ecran),
-                 spr_balleX5(&ecran),
                  spr_balleXAuto(&ecran),
                  spr_reload(&ecran)
 {
@@ -116,7 +115,6 @@ void Ecran::init()
     spr_shd.init();
     spr_balleX1.init();
     spr_balleX3.init();
-    spr_balleX5.init();
     spr_balleXAuto.init();
     spr_reload.init();
 }
