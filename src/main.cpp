@@ -11,9 +11,11 @@ int lastTime = 0;
 void setup()
 {
   Serial.begin(115200);
+  Serial.printf("STATE_INIT : %d\n", STATE_INIT);
   ecran.init();
   ecran.effacerEcran();
-  Serial.printf("STATE_INIT : %d\n", STATE_INIT);
+   
+  
   switch (STATE_INIT)
   {
   case 0:
@@ -28,22 +30,21 @@ void setup()
     ecran.afficherEcranJeuArme(50, modeTire::simple, etatArme::attente, 0);
 
     break;
-     case 4:
+  case 4:
     ecran.afficherEcranJeuArme(50, modeTire::rafale, etatArme::attente, 0);
 
     break;
-         case 5:
+  case 5:
     ecran.afficherEcranJeuArme(50, modeTire::automatique, etatArme::attente, 0);
 
     break;
 
-             case 6:
+  case 6:
     ecran.afficherEcranJeuArme(50, modeTire::automatique, etatArme::rechargeChargeur, 10);
 
     break;
-      case 7:
+  case 7:
     ecran.afficherEcranJeu(50, 50, 50, modeTire::automatique, etatArme::rechargeChargeur, 10, 1);
-
 
     break;
   }
@@ -132,16 +133,15 @@ void loop()
       case 5:
         // On se fait toucher dans l'armure
         ecran.SetChangeToEcranInGame(20, 50, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
-  break;
+        break;
 
       case 6:
         // On se fait toucher dans la vie
         ecran.SetChangeToEcranInGame(20, 20, 20, modeTire::automatique, etatArme::rechargeChargeur, 0, 1);
-  break;
-
+        break;
       }
-      memoEtape = etape;
-ecran.afficherEcranJeuMAJ();
+    memoEtape = etape;
+    ecran.afficherEcranJeuMAJ();
     // ecran.effacerEcran();
     /*ecran.afficherCentrerNormal("Hello World");
     delay(2500);
