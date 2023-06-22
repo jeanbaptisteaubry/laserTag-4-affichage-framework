@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "Ecran.h"
 #include "enum.h"
-#define STATE_INIT 7
+#define STATE_INIT 6
 Ecran ecran;
 int etape = 0;
 int memoEtape = -1;
@@ -45,6 +45,10 @@ void setup()
     break;
   case 7:
     ecran.afficherEcranJeu(50, 50, 50, modeTire::automatique, etatArme::rechargeChargeur, 10, 1);
+
+    break;
+  case 8:
+    ecran.afficherEcranJeu(40, 50, 60, modeTire::automatique, etatArme::attente, 10, 1);
 
     break;
   }
