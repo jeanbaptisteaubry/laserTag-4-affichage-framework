@@ -19,6 +19,13 @@
 class Ecran
 {
 private:
+
+ Sprite_Test1Ligne spr_test1Ligne; //Sprite 1 ligne
+    Sprite_Test2Lignes spr_test2Lignes; //Sprite 2 ligne
+    Sprite_Test3Lignes spr_test3Lignes; //Sprite 3 ligne
+    
+   
+
     Sprite_TeteDeMort spr_tdm; //Sprite Tête de mort
     Sprite_Bouclier spr_shd; //Sprite shield => bouclié ou armure
     Sprite_BallePar1 spr_balleX1; //Sprite de balle 1 coup
@@ -26,6 +33,7 @@ private:
   //  eSprite_balleX5 spr_balleX5; //Sprite de balle 5 coups
     Sprite_BalleAuto3 spr_balleXAuto; //Sprite de balle automatique
     eSprite_Reload spr_reload; //Sprite de rechargement
+    Sprite_Cible spr_cible; //Sprite du nombre de victimes faites
 
     int memoMunition = -1; // Nombre de munition dans le chargeur
     int memoArmure = -1; // Nombre de point d'armure
@@ -114,6 +122,11 @@ public:
      * @param vie
      */
     void afficherEcranJeuArmureVie(int armure, int vie);
+
+    /**
+     * @brief Affiche l'image de test
+    */
+    void AfficherImageTest(int nbLigne);
 
     /**
      * @brief Affiche l'écran  de jeu sans activité mise en avant

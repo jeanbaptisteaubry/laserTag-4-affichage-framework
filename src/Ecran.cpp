@@ -8,13 +8,28 @@
 // #include <Fonts/GFXFF/FreeSans9pt7b.h>
 
 Ecran::Ecran() : ecran(),
+                spr_test1Ligne(&ecran),
+                 spr_test2Lignes(&ecran),
+                 spr_test3Lignes(&ecran),
                  spr_tdm(&ecran),
                  spr_shd(&ecran),
                  spr_balleX1(&ecran),
                  spr_balleX3(&ecran),
                  spr_balleXAuto(&ecran),
-                 spr_reload(&ecran)
+                 spr_reload(&ecran),
+                 spr_cible(&ecran)
+                 
 {
+    spr_test1Ligne.init();
+    spr_test2Lignes.init();
+    spr_test3Lignes.init();
+    spr_tdm.init();
+    spr_shd.init();
+    spr_balleX1.init();
+    spr_balleX3.init();
+    spr_balleXAuto.init();
+    spr_reload.init();
+    spr_cible.init();
 }
 
 /**
@@ -111,12 +126,7 @@ void Ecran::init()
         return;
     }
 
-    spr_tdm.init();
-    spr_shd.init();
-    spr_balleX1.init();
-    spr_balleX3.init();
-    spr_balleXAuto.init();
-    spr_reload.init();
+
 }
 
 void Ecran::effacerEcran()
@@ -304,6 +314,30 @@ void Ecran::afficherEcranJeuArmureVie(int armure, int vie)
     //  drawValue(vie,spr_tdm.width()*1.5f + width / 2 + (width / 2 -  spr_tdm.width()*1.5f )/2, height / 2, 5, TFT_WHITE);
 }
 
+
+void Ecran::AfficherImageTest(int nbLigne)
+{
+    effacerEcran();
+    setChange();
+    //DrawSprite (0,0, &spr_test1Ligne, TFT_WHITE, 1.0f);
+    spr_tdm.pushSprite(0,0);
+    spr_shd.pushSprite(32,0);
+    spr_balleX1.pushSprite(64,0);
+
+    spr_balleX3.pushSprite(0,32);
+    spr_balleXAuto.pushSprite(32,32);
+    spr_reload.pushSprite(64,32);
+
+    spr_test1Ligne.pushSprite(0,64);
+    spr_test2Lignes.pushSprite(32,64);
+    spr_test3Lignes.pushSprite(64,64);
+/*
+    spr_balleX1.pushSprite(0,128);
+    spr_balleX3.pushSprite(32,128);
+    spr_balleXAuto.pushSprite(64,128);*/
+}
+    
+
 /**
  * @brief Affiche l'écran  de jeu sans activité mise en avant
  *
@@ -362,6 +396,7 @@ void Ecran::afficherEcranJeu(int armure, int vie, int munition, modeTire mode, e
 
     // Il faut afficher le score en bas à droite
     // TODO : Manque le sprite
+    spr_cible.pushSprite(width / 2, height / 2  +deltaY);
     drawValue(score, 3 * width / 4 + spr_balleXAuto.width() / 2, spr_balleXAuto.height() / 2 + height / 2 + deltaY / 2, 2, TFT_WHITE);
 }
 
