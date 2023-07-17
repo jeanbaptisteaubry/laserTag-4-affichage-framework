@@ -26,15 +26,15 @@ public:
     String donneTexte();
     void setTexteBase(String texteBase);
 
-    void CaracterePossibleSuivant();
+    void CaracterePossibleSuivant(); // U On propose le caractère suivant
 
-    void CaracterePossiblePrecedent();
+    void CaracterePossiblePrecedent(); // D On propose le caractère précédent
 
-    void CaractereSelectionPrecedent();
+    void CaractereSelectionPrecedent(); // P On recule le curseur
 
-     void SupprimerCharAct();
+     void SupprimerCharAct(); // S On supprime la position de curseur, et on se met sur le suivant s'il y a des caractères après ou sur le précédent si on est à la fin.
 
-    void CaractereSelectionSuivant();
+    void CaractereSelectionSuivant(); // N (suivaNt)On avance le curseur
 
     String DonneChaineAvantAct();
 

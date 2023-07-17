@@ -2,8 +2,11 @@
 #include <Arduino.h>
 #include "Ecran.h"
 #include "enum.h"
-#define STATE_INIT 0
+#include "InputText.h"
+#define STATE_INIT 10
 Ecran ecran;
+InputText inputText("TexteBase");
+char ActionInputTexte[] = "NNNNSUUUUUUUUUUNDDDDDN";
 int etape = 0;
 int memoEtape = -1;
 int lastTime = 0;
@@ -14,11 +17,11 @@ void setup()
   Serial.printf("STATE_INIT : %d\n", STATE_INIT);
   ecran.init();
   ecran.effacerEcran();
-   
-  
+
   switch (STATE_INIT)
   {
-  case 0:
+  case 0: // Pour tester les écrans dans le temps (on passe à l'étape suivante toutes les 5 secondes)
+    // Chaque étape doit être composée de 2 écrans : un sur l'action en cours et un global
     Serial.printf("***** Démarrage *****\n");
     Serial.printf("Etape : %d\n", etape);
 
@@ -51,9 +54,11 @@ void setup()
     ecran.afficherEcranJeu(40, 50, 60, modeTire::automatique, etatArme::attente, 10, 1);
 
     break;
-  case 9:
+  case 9: // Pour tester l'affichage des sprites, il est arrivé que l'affichage était douteux, juste à cause du sprite...
     ecran.AfficherImageTest(1);
     Serial.printf("***** Démarrage 9 *****\n");
+    break;
+  case 10: // On va tester les inputs
     break;
   }
 }
@@ -64,14 +69,56 @@ void loop()
 
   switch (STATE_INIT)
   {
-    case 9 :
-      if (millis() - lastTime > 1000)
+  case 10:
+    if (millis() - lastTime > 6000)
+    {
+      lastTime = millis();
+      etape++;
+      if (etape > strlen(ActionInputTexte) - 1)
+        etape = 0;
+      Serial.printf("Etape : %d\n Lettre %c\n", etape, ActionInputTexte[etape]);
+      ecranAfficherEtape = false;
+    }
+    // On fait une animation de test
+    if (millis() - lastTime < 1000)
+    {
+      if (ecranAfficherEtape == false)
       {
-        lastTime = millis();
-        
+        ecranAfficherEtape = true;
+        ecran.effacerEcran();
+        char str[25];
+        sprintf(str, "Etape : %d\n Lettre %c\n", etape, ActionInputTexte[etape]);
+        ecran.afficherCentrerNormal(str, 1);
       }
-      break;
+    }
+    else
+    {
+      if (memoEtape != etape)
+      {
 
+        switch (ActionInputTexte[etape])
+        {
+        case 'U':
+          inputText.CaracterePossibleSuivant();
+          break;
+        case 'D':
+          inputText.CaracterePossiblePrecedent();
+          break;
+        case 'P':
+          inputText.CaractereSelectionPrecedent();
+          break;
+        case 'S':
+          inputText.SupprimerCharAct();
+          break;
+        case 'N':
+          inputText.CaractereSelectionSuivant();
+          break;
+        }
+        ecran.EcranAfficherChoixMdPSSID(inputText);
+      }
+       memoEtape = etape;
+    }
+   
     break;
 
   case 1:
