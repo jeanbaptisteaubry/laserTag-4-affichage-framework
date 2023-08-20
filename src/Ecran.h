@@ -3,7 +3,7 @@
 #include <SPI.h>
 
 #include "sprite.h" 
-#include "eSprite_reload.h"
+#include "memoESprite\eSprite_reload.h"
 #include "enum.h"
 #include "InputText.h"
 
